@@ -53,4 +53,11 @@ public class GlobalExceptionHandler {
         log.error("Unexpected error: %s", ex, ex.getMessage());
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", null);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        log.warn("Illegal argument: %s", ex.getMessage());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid argument : "+ex.getMessage(), null);
+    }
+
 }

@@ -7,6 +7,7 @@ import com.sanjeevnode.patientservice.utils.AppLogger;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,38 +23,64 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-    @Operation(summary = "Get all patients")
     @GetMapping
+    @Operation(summary = "Get all patients")
     public ResponseEntity<ApiResponse> getPatients() {
         logger.info("GET /patient");
-        return patientService.getPatients();
+        var patients = patientService.getPatients();
+        return ResponseEntity.ok(ApiResponse.builder()
+                .status(HttpStatus.OK)
+                .message("Patients fetched successfully")
+                .data(patients)
+                .build());
     }
 
-    @Operation(summary = "Get patient by id")
     @GetMapping("/{id}")
+    @Operation(summary = "Get patient by ID")
     public ResponseEntity<ApiResponse> getPatientById(@PathVariable String id) {
         logger.info("GET /patient/%s", id);
-        return patientService.getPatientById(id);
+        var patient = patientService.getPatientById(id);
+        return ResponseEntity.ok(ApiResponse.builder()
+                .status(HttpStatus.OK)
+                .message("Patient fetched successfully")
+                .data(patient)
+                .build());
     }
 
-    @Operation(summary = "Create a new patient")
     @PostMapping
-    public ResponseEntity<ApiResponse> createPatient(@RequestBody @Valid  PatientRequestDTO patientRequestDTO) {
+    @Operation(summary = "Create a new patient")
+    public ResponseEntity<ApiResponse> createPatient(@RequestBody @Valid PatientRequestDTO patientRequestDTO) {
         logger.info("POST /patient with data %s", patientRequestDTO.toString());
-        return patientService.createPatient(patientRequestDTO);
+        var createdPatient = patientService.createPatient(patientRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.builder()
+                .status(HttpStatus.CREATED)
+                .message("Patient created successfully")
+                .data(createdPatient)
+                .build());
     }
 
-    @Operation(summary = "Update an existing patient")
     @PutMapping("/{id}")
+    @Operation(summary = "Update an existing patient")
     public ResponseEntity<ApiResponse> updatePatient(@PathVariable String id, @RequestBody @Valid PatientRequestDTO patientRequestDTO) {
         logger.info("PUT /patient/%s with data %s", id, patientRequestDTO.toString());
-        return patientService.updatePatient(id, patientRequestDTO);
+        var updatedPatient = patientService.updatePatient(id, patientRequestDTO);
+        return ResponseEntity.ok(ApiResponse.builder()
+                .status(HttpStatus.OK)
+                .message("Patient updated successfully")
+                .data(updatedPatient)
+                .build());
     }
 
-    @Operation(summary = "Delete a patient")
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete a patient")
     public ResponseEntity<ApiResponse> deletePatient(@PathVariable String id) {
         logger.info("DELETE /patient/%s", id);
-        return patientService.deletePatient(id);
+        patientService.deletePatient(id);
+        return ResponseEntity.ok(ApiResponse.builder()
+                .status(HttpStatus.OK)
+                .message("Patient deleted successfully")
+                .data(null)
+                .build());
     }
 }
+
