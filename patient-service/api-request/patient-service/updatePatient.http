@@ -1,0 +1,14 @@
+### GET request to example server
+
+PUT http://localhost:4000/patient/75bfacf1-ac1f-49b7-aaff-c3f452207b14
+Content-Type: application/json
+
+{
+  "name": "John Doey",
+  "email": "jhondoe@example1.com",
+  "address": "Main Street 123",
+  "dateOfBirth": "1995-09-09",
+  "registeredDate": "2024-11-28"
+}
+
+###
